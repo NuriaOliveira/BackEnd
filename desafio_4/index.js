@@ -7,6 +7,7 @@ const { emit } = require('process')
 const routerProd = require('./routes/products.routes')
 const routerCart = require('./routes/carts.routes')
 const routerHome = require('./routes/home.routes')
+const routerRTP = require('./routes/realTimeProducts.routes')
 //const ProductManager = require('./ProductManager')
 
 const app = express()
@@ -28,11 +29,14 @@ app.set('views', __dirname + '/views')
 app.use('/api/products', routerProd)
 app.use('/api/carts', routerCart)
 app.use('/api/home', routerHome)
+app.use('/api/realTimeProducts', routerRTP)
 
 
 //Socket
 const io = new Server(server)
-
+io.on('connection', (socket) => {
+    socket.emit('inicio', "Sesion iniciada")
+})
 
 
 server.listen(PORT, ()=> {

@@ -6,14 +6,14 @@ const { Router } = express
 const product = new ProductManager()
 
 const routerProd = Router()
-
+//Consultar todos los productos
 routerProd.get('/', async(req, res) => {
     let products = await product.getProducts()
     let { limit } = req.query
     res.status(200).send(products.slice(0, limit))
 
 })
-
+//Consultar producto por id
 routerProd.get('/:pid', async(req, res) => {
     let prod = await product.getProductById(req.params.pid)
     //console.log(prod)
@@ -26,6 +26,7 @@ routerProd.get('/:pid', async(req, res) => {
     
 })
 
+//Cargar nuevo producto
 routerProd.post('/', async(req, res) => {
     let producto = req.body
     if(!producto.title || !producto.description || !producto.price || !producto.code || !producto.stock || !producto.category || !producto.status){
@@ -41,7 +42,7 @@ routerProd.post('/', async(req, res) => {
     }
     
 })
-
+//Actualizar producto
 routerProd.put('/:pid', async(req, res) => {
     let prod = await product.updateProduct(req.params.pid, req.body)
 
@@ -52,7 +53,7 @@ routerProd.put('/:pid', async(req, res) => {
     }
 
 })
-
+//Eliminar producto
 routerProd.delete('/:pid', async(req, res) => {
     let prod = await product.deleteProduct(req.params.pid)
 
