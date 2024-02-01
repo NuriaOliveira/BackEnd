@@ -15,9 +15,7 @@ routerRTP.get('/', async(req, res) => {
     //res.status(200).send(products.slice(0, limit))
     //res.render('realTimeProducts',products.slice(0, limit))
     //socket.emit('realTimeProducts',products.slice(0, limit))
-    res.render("realTimeProducts", {
-        products: products.slice(0, limit)
-    })
+    res.render("realTimeProducts", {})
     
 })
 

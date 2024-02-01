@@ -8,12 +8,12 @@ const routerProd = require('./routes/products.routes')
 const routerCart = require('./routes/carts.routes')
 const routerHome = require('./routes/home.routes')
 const routerRTP = require('./routes/realTimeProducts.routes')
-//const ProductManager = require('./ProductManager')
+const ProductManager = require('./src/ProductManager')
 
 const app = express()
 PORT = 8080
 const server = http.createServer(app)
-//let product = new ProductManager()
+let productManager = new ProductManager()
 
 //Configuraciones
 app.use(express.json())
@@ -34,9 +34,25 @@ app.use('/api/realTimeProducts', routerRTP)
 
 //Socket
 const io = new Server(server)
-io.on('connection', (socket) => {
+io.on('connection', async(socket) => {
+    let productos = await productManager.getProducts()
     socket.emit('inicio', "Sesion iniciada")
+    socket.on('inicio:OK', () => {
+        socket.emit('listarProductos', productos)
+    })
+
+    socket.on('addPorduct', async(product) => {
+        let respuesta = await productManager.addProduct(product)
+        if (respuesta) {
+            socket.emit('agregarProducto', product)
+
+            console.log("El producto fue cargado correctamente")
+        } else {
+            console.log("El producto ya existe")
+        }
+    })
 })
+
 
 
 server.listen(PORT, ()=> {
