@@ -45,12 +45,21 @@ io.on('connection', async(socket) => {
         let respuesta = await productManager.addProduct(product)
         if (respuesta) {
             socket.emit('agregarProducto', product)
-
-            console.log("El producto fue cargado correctamente")
         } else {
             console.log("El producto ya existe")
         }
     })
+
+    socket.on('deleteProduct', async(prodId) => {
+        let respuesta = await productManager.deleteProduct(prodId)
+        if (respuesta) {
+            respuesta = await productManager.getProducts()
+            socket.emit('eliminarProducto', respuesta)
+
+        } else {
+            console.log("Error al eliminar producto")
+        }
+    }) 
 })
 
 
