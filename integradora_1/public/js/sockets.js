@@ -15,3 +15,7 @@ socket.on('eliminarProducto', (products) => {
     console.log("El producto fue eliminado")
 
 })
+
+socket.on('obtenerProducto', (prod) => {
+    console.log(prod)
+})

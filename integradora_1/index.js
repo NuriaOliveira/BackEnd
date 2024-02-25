@@ -63,6 +63,15 @@ io.on('connection', async(socket) => {
             console.log("Error al eliminar producto")
         }
     }) 
+
+    socket.on('getProduct', async(prodId) => {
+        let producto = await productManagerMongo.getProductById(prodId)
+        if(producto){
+            socket.emit('obtenerProducto', producto)
+        }else{
+            console.log("Error al buscar producto.")
+        }
+    })
 })
 
 

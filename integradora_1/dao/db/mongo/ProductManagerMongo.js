@@ -63,10 +63,11 @@ class ProductManagerMongo {
     async getProductById(id){
         try {
 
-            let data = await fs.promises.readFile(this.path, 'utf-8')
-            this.products = JSON.parse(data)
-            return this.products.find(p => p.id == id)
-
+            //let data = await fs.promises.readFile(this.path, 'utf-8')
+            let data = await Products.findById(id)
+            //this.products = JSON.parse(data)
+            //return this.products.find(p => p.id == id)
+            return data
         } catch (error) {
             console.log(error)
         }

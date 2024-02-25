@@ -16,7 +16,7 @@ const addProduct = () => {
         category: document.getElementById('category').value,
         status: document.getElementById('status').value
     }
-    console.log(producto)
+    //console.log(producto)
     //console.log(JSON.parse(producto))
     document.formularioCarga.reset()
 
@@ -58,6 +58,7 @@ const newCard = (elem) => {
                 <p class="card-text">Estado: ${elem.status}</p>
                 <p class="card-text">Categoria: ${elem.category}</p>
                 <a class="btn btn-danger delete" data-id=${elem._id}>Eliminar</a>
+                <a class="btn btn-success update" data-id=${elem._id}>Editar</a>
             </div>
         </div>
     </div>
@@ -65,6 +66,11 @@ const newCard = (elem) => {
     const btnEliminar = div.querySelector(".delete")
     btnEliminar.addEventListener('click', () => {
         socket.emit('deleteProduct', btnEliminar.dataset.id)
+    })
+
+    const btnUpdate = div.querySelector(".update")
+    btnUpdate.addEventListener('click', () => {
+        socket.emit('getProduct', btnUpdate.dataset.id)
     })
 
     return div
