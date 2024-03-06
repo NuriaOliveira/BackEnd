@@ -76,8 +76,11 @@ class ProductManagerMongo {
 
     async updateProduct(id, product){
         try {
-            let data = await fs.promises.readFile(this.path, 'utf-8')
-            this.products = JSON.parse(data)
+            //let data = await fs.promises.readFile(this.path, 'utf-8')
+            let data = await Products.updateOne({"_id": id},
+            {$set: { code: product.code, description: product.description, stock: product.stock, price: product.price, title: product.title, thumbnail: product.thumbnail, status: product.status, category: product.category}})
+            return true
+            /*this.products = JSON.parse(data)
 
             const indice = this.products.findIndex(p => p.id === id)
 
@@ -96,9 +99,10 @@ class ProductManagerMongo {
 
             await fs.promises.writeFile(this.path, JSON.stringify(this.products))
             return true
-
+        */
         } catch (error) {
             console.log(error)
+            return false
         }
     }
 

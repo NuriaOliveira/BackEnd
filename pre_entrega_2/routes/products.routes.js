@@ -17,7 +17,8 @@ routerProd.get('/', async(req, res) => {
 })
 //Consultar producto por id
 routerProd.get('/:pid', async(req, res) => {
-    let prod = await product.getProductById(req.params.pid)
+    //let prod = await product.getProductById(req.params.pid)
+    let prod = await productM.getProductById(req.params.pid)
     //console.log(prod)
     //console.log(req.params.pid)
     if (prod) {
@@ -35,7 +36,8 @@ routerProd.post('/', async(req, res) => {
         res.send("Todos los campos con obligatorios")
     }else{
         console.log(producto)
-        let prod = await product.addProduct(producto)
+        //let prod = await product.addProduct(producto)
+        let prod = await productM.addProduct(producto)
         if (prod) {
             res.status(201).send("El producto fue cargado correctamente")
         } else {
@@ -46,7 +48,7 @@ routerProd.post('/', async(req, res) => {
 })
 //Actualizar producto
 routerProd.put('/:pid', async(req, res) => {
-    let prod = await product.updateProduct(req.params.pid, req.body)
+    let prod = await productM.updateProduct(req.params.pid, req.body)
 
     if (prod) {
         res.status(201).send("Producto actualizado correctamente")
