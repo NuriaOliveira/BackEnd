@@ -19,7 +19,7 @@ routerCart.get('/', async(req, res) => {
 
 //Consultar carrito por id
 routerCart.get('/:cid', async(req, res) => {
-    let carrito = await cart.getCartById(req.params.cid)
+    let carrito = await cartM.getCartById(req.params.cid)
     //console.log(prod)
     //console.log(req.params.pid)
     if (carrito) {
@@ -30,7 +30,7 @@ routerCart.get('/:cid', async(req, res) => {
     
 })
 
-//Agregar nuevo producto a carrito
+//Crear nuevo carrito
 routerCart.post('/', async(req, res) => {
     let carrito = req.body
     console.log(carrito)
@@ -43,9 +43,9 @@ routerCart.post('/', async(req, res) => {
     
 })
 
-//Aumentar la cantidad de producto
+//Agregar productos a carrito
 routerCart.post('/:cid/products/:pid', async(req, res) => {
-    let is_ok = await cart.updateCart(req.params.cid, req.params.pid)
+    let is_ok = await cartM.updateCart(req.params.cid, req.params.pid)
     if (is_ok) {
         res.status(201).send("Producto cargado correctamente")
     } else {
