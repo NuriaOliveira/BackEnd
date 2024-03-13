@@ -1,6 +1,8 @@
 const fs = require('fs')
 const uuid4 = require('uuid4')
 const Carts = require('../models/cart.model')
+const { pid } = require('process')
+const ObjectId = require('mongoose').Types.ObjectId
 
 class CartManagerMongo {
     
@@ -74,14 +76,24 @@ class CartManagerMongo {
         try {
             //let data = await fs.promises.readFile(this.path, 'utf-8')
             //this.carts = JSON.parse(data)
-            //let indicec = this.carts.findIndex(c => c.id === cid)
-            //let data = await Carts.findOne({_id: cid}).populate('products.product')
-            let data = await Carts.findOneAndUpdate({_id: cid, products: {_id : pid}}, {$inc: {quantity : 1}}, {new : true, upsert: true})
-            //let data = await Carts.findOne({_id: cid, products: {_id : pid}})
+            let data = await Carts.findOne({_id: cid})
+            let productos = data.products
 
-            console.log(data)
+            if(productos.find(p => p.product._id == pid)){
+                
+                await Carts.updateOne({'_id': cid, 'products.product': pid},
+                {$inc: { 'products.$[prod].quantity' : 1}},
+                {arrayFilters: [{'prod.product' : pid}]}) 
 
-            //await Carts.updateOne({_id : cid}, data)
+            }else{
+                console.log('nop =S')
+
+                await Carts.updateOne({'_id': cid},
+                                        {$push: {products: {product: pid, quantity : 1} }})
+            }
+           
+            
+
             return true
             /*
             if(await Carts.find({$and:[{_id: cid}, {products : {_id : pid}}]})){ 
@@ -103,25 +115,24 @@ class CartManagerMongo {
 
         } catch (error) {
             console.log(error)
+            return false
         }
     }
 
-    async deleteProduct(id){
+    async deleteProduct(cid,pid){
         try {
             let products = JSON.parse(await fs.promises.readFile(this.path, 'utf-8'))
-
-            if (products.find(p => p.id === id)) {
-                products = products.filter((p)=>p.id !== id)
-                await fs.promises.writeFile(this.path, JSON.stringify(products))
-                return true
-            } else {
-                return false
-            }
+            await Carts.updateOne({'_id': cid, 'products.product': pid},
+            {$pull: {products: {product: pid}}})
+                
+            return true
+           
 
             console.log(products)
             
         } catch (error) {
             console.log(error)
+            return false
         }
     }
 }

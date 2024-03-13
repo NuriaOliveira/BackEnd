@@ -53,4 +53,16 @@ routerCart.post('/:cid/products/:pid', async(req, res) => {
     }
 })
 
+//Eliminar producto del carrito
+routerCart.delete('/:cid/products/:pid', async(req, res) => {
+    let is_ok = await cartM.deleteProduct(req.params.cid, req.params.pid)
+    if (is_ok) {
+        res.status(201).send("Producto eliminado correctamente")
+    } else {
+        res.status(404).send("No se encontro el producto")
+    }
+})
+
+
+
 module.exports = routerCart
